@@ -5,6 +5,7 @@
 /dist
 /.next
 /out
+/public
 
 # Logs
 logs
