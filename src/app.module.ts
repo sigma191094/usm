@@ -54,7 +54,7 @@ import { SettingsService } from './admin/settings.service';
         serveRoot: '/uploads',
       },
       {
-        rootPath: join(process.cwd(), 'public'),
+        rootPath: join(__dirname, '..', '..', 'public'),
         exclude: ['/api*'],
       },
     ),
