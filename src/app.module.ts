@@ -55,7 +55,7 @@ import { SettingsService } from './admin/settings.service';
       },
       {
         rootPath: join(process.cwd(), 'public'),
-        exclude: ['/api'],
+        exclude: ['/api*'],
       },
     ),
     AuthModule,
