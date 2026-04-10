@@ -3,15 +3,15 @@ import type { Request } from 'express';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { MatchesService } from './matches.service';
-import { ApiSportsService } from './matches.api-sports.service';
 import { JwtOptionalGuard } from '../auth/jwt-optional.guard';
+import { MatchesScraperService } from './matches.scraper.service';
 
 @ApiTags('Matches')
 @Controller('matches')
 export class MatchesController {
   constructor(
     private service: MatchesService,
-    private apiSportsService: ApiSportsService
+    private scraperService: MatchesScraperService
   ) {}
 
   @Get('players')
@@ -37,14 +37,16 @@ export class MatchesController {
   @Post('sync/standings')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth() @UseGuards(AuthGuard('jwt'))
-  @ApiOperation({ summary: 'Sync standings from API-Sports (admin)' })
-  syncStandings() { return this.apiSportsService.syncStandings(); }
+  @ApiOperation({ summary: 'Sync standings from Soccerway (admin)' })
+  syncStandings() { return this.scraperService.scrapeStandings(); }
 
   @Post('sync/fixtures')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth() @UseGuards(AuthGuard('jwt'))
-  @ApiOperation({ summary: 'Sync fixtures from API-Sports (admin)' })
-  syncFixtures() { return this.apiSportsService.syncFixtures(); }
+  @ApiOperation({ summary: 'Sync fixtures from Soccerway (admin)' })
+  syncFixtures() { return this.scraperService.scrapeMatches(); }
+
+
 
   @Get() 
   @UseGuards(JwtOptionalGuard)

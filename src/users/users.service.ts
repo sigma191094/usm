@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserRole } from './user.entity';
 import { LoyaltyTier } from './loyalty-tier.entity';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService implements OnModuleInit {
@@ -54,7 +55,21 @@ export class UsersService implements OnModuleInit {
     return user;
   }
 
-  async update(id: number, data: Partial<User>) {
+  async update(id: number, data: any) {
+    const user = await this.findOne(id);
+    
+    // Handle password hashing
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+
+    // Keep "name" in sync with firstName/lastName
+    if (data.firstName || data.lastName) {
+      const fName = data.firstName || user.firstName;
+      const lName = data.lastName || user.lastName;
+      data.name = `${fName} ${lName}`.trim();
+    }
+
     await this.repo.update(id, data);
     return this.findOne(id);
   }

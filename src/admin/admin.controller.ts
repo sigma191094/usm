@@ -15,6 +15,7 @@ import { DonationsService } from '../donations/donations.service';
 import { SupportService } from '../support/support.service';
 import { CommunityService } from '../community/community.service';
 import { FanPostStatus } from '../community/entities/fan-post.entity';
+import { SponsorsService } from '../sponsors/sponsors.service';
 
 @ApiTags('Admin')
 @ApiBearerAuth()
@@ -33,6 +34,7 @@ export class AdminController {
     private donationsService: DonationsService,
     private supportService: SupportService,
     private communityService: CommunityService,
+    private sponsorsService: SponsorsService,
   ) {}
 
   @Get('analytics')
@@ -123,6 +125,10 @@ export class AdminController {
   @Patch('matches/:id')
   @ApiOperation({ summary: 'Update match (status, score, etc)' })
   updateMatch(@Param('id') id: string, @Body() data: any) { return this.matchesService.update(+id, data); }
+
+  @Delete('matches/clear')
+  @ApiOperation({ summary: 'Clear all matches' })
+  clearAllMatches() { return this.matchesService.clearAllMatches(); }
 
   @Delete('matches/:id')
   @ApiOperation({ summary: 'Delete match' })
@@ -290,4 +296,25 @@ export class AdminController {
   deleteCandidate(@Param('id') id: string) {
     return this.communityService.deleteCandidate(+id);
   }
+
+  // --- Sponsor Management ---
+  @Get('sponsors')
+  @ApiOperation({ summary: 'List all sponsors (admin)' })
+  getSponsors() { return this.sponsorsService.findAllAdmin(); }
+
+  @Post('sponsors')
+  @ApiOperation({ summary: 'Create new sponsor' })
+  createSponsor(@Body() data: any) { 
+    return this.sponsorsService.create(data); 
+  }
+
+  @Patch('sponsors/:id')
+  @ApiOperation({ summary: 'Update sponsor' })
+  updateSponsor(@Param('id') id: string, @Body() data: any) { 
+    return this.sponsorsService.update(+id, data); 
+  }
+
+  @Delete('sponsors/:id')
+  @ApiOperation({ summary: 'Delete sponsor' })
+  deleteSponsor(@Param('id') id: string) { return this.sponsorsService.remove(+id); }
 }

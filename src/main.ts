@@ -27,8 +27,9 @@ async function bootstrap() {
 
   const port = process.env.PORT ?? 3002;
   await app.listen(port, '0.0.0.0');
-  console.log(`🚀 USM Media API running on http://127.0.0.1:${port}`);
-  console.log(`📖 Swagger docs at http://127.0.0.1:${port}/api`);
+  console.log(`🚀 API running on port ${port}`);
+  console.log(`🌍 Production API: https://usm-production-cd9a.up.railway.app/api`);
+  console.log(`📖 Swagger docs at: http://localhost:${port}/api`);
 }
 bootstrap().catch(err => {
   console.error('❌ Bootstrap failed:', err);

@@ -23,6 +23,7 @@ import { GiveawaysModule } from './giveaways/giveaways.module';
 import { ForumModule } from './forum/forum.module';
 import { SupportModule } from './support/support.module';
 import { CommunityModule } from './community/community.module';
+import { SponsorsModule } from './sponsors/sponsors.module';
 import { SharedUploadsController } from './shared/shared-uploads.controller';
 import { SystemSetting } from './admin/system-setting.entity';
 import { SettingsController } from './admin/settings.controller';
@@ -74,6 +75,7 @@ import { SettingsService } from './admin/settings.service';
     ForumModule,
     SupportModule,
     CommunityModule,
+    SponsorsModule,
   ],
   controllers: [AppController, SettingsController, SharedUploadsController],
   providers: [AppService, SettingsService],

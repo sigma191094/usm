@@ -12,6 +12,7 @@ import { FunZoneModule } from '../fun-zone/fun-zone.module';
 import { DonationsModule } from '../donations/donations.module';
 import { SupportModule } from '../support/support.module';
 import { CommunityModule } from '../community/community.module';
+import { SponsorsModule } from '../sponsors/sponsors.module';
 import { SystemSetting } from './system-setting.entity';
 import { SettingsService } from './settings.service';
 import { SettingsController } from './settings.controller';
@@ -28,7 +29,8 @@ import { SettingsController } from './settings.controller';
     FunZoneModule,
     DonationsModule,
     SupportModule,
-    CommunityModule
+    CommunityModule,
+    SponsorsModule,
   ],
   controllers: [AdminController, UploadsController, SettingsController],
   providers: [SettingsService],

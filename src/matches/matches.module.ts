@@ -10,8 +10,8 @@ import { MatchesService } from './matches.service';
 import { MatchesController } from './matches.controller';
 import { VotesController } from './votes.controller';
 import { VotesService } from './votes.service';
-import { ApiSportsService } from './matches.api-sports.service';
 import { MatchesTaskService } from './matches.task.service';
+import { MatchesScraperService } from './matches.scraper.service';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { UsersModule } from '../users/users.module';
 import { PointsModule } from '../points/points.module';
@@ -24,7 +24,7 @@ import { PointsModule } from '../points/points.module';
     PointsModule
   ],
   controllers: [MatchesController, VotesController],
-  providers: [MatchesService, VotesService, ApiSportsService, MatchesTaskService],
+  providers: [MatchesService, VotesService, MatchesTaskService, MatchesScraperService],
   exports: [MatchesService],
 })
 export class MatchesModule {}

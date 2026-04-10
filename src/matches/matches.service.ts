@@ -265,6 +265,16 @@ export class MatchesService {
     return this.repo.remove(match as any);
   }
 
+  async clearAllMatches() {
+    this.logger.warn('Clearing all matches per admin request...');
+    await this.repo.manager.transaction(async (transactionalEntityManager) => {
+      await transactionalEntityManager.query('SET FOREIGN_KEY_CHECKS = 0;');
+      await transactionalEntityManager.createQueryBuilder().delete().from(Match).execute();
+      await transactionalEntityManager.query('SET FOREIGN_KEY_CHECKS = 1;');
+    });
+    return { success: true, message: 'All matches have been deleted' };
+  }
+
   count() { return this.repo.count(); }
 
   // ─── Players ────────────────────────────────────────────────
