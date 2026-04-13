@@ -16,7 +16,13 @@ async function bootstrap() {
     if (url.startsWith('/api') || url.startsWith('/uploads') || url.includes('.')) {
       return next();
     }
-    res.sendFile(join(process.cwd(), 'public', 'index.html'));
+    const indexPath = join(process.cwd(), 'public', 'index.html');
+    res.sendFile(indexPath, (err: any) => {
+      if (err) {
+        // index.html not found (frontend not built yet on this deployment)
+        next();
+      }
+    });
   });
 
   app.enableCors({
