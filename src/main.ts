@@ -1,12 +1,44 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, RequestMethod } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api', {
-    exclude: ['/', 'login', 'welcome', 'register', 'community', 'matches', 'news', 'store', 'forum', 'gallery', 'highlights', 'equipe', 'donate', 'lucky-draw', 'points', 'fun-zone', 'premium', 'profile', 'support', 'vote', 'admin'],
+    exclude: [
+      '/',
+      'login',
+      'register',
+      'welcome',
+      'home',
+      'community',
+      'donate',
+      'equipe',
+      'forum',
+      'fun-zone',
+      'gallery',
+      'highlights',
+      'lucky-draw',
+      'matches',
+      'news',
+      'points',
+      'premium',
+      'profile',
+      'support',
+      'vote',
+      'store',
+      'admin',
+      'admin/sponsors',
+      'admin/matches',
+      'admin/settings',
+      'admin/matches/new',
+      'matches/details',
+      'news/details',
+      'news/1',
+      'news/2',
+      'news/3',
+    ],
   });
 
   app.enableCors({
