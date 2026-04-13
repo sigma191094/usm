@@ -5,7 +5,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', {
+    exclude: ['/', 'login', 'welcome', 'register', 'community', 'matches', 'news', 'store', 'forum', 'gallery', 'highlights', 'equipe', 'donate', 'lucky-draw', 'points', 'fun-zone', 'premium', 'profile', 'support', 'vote', 'admin'],
+  });
 
   app.enableCors({
     origin: true, // Allow any origin in development for easier mobile testing

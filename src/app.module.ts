@@ -39,7 +39,7 @@ import { SettingsService } from './admin/settings.service';
       useFactory: (config: ConfigService) => ({
         type: 'mysql',
         host: config.get<string>('DATABASE_HOST'),
-        port: config.get<number>('DATABASE_PORT'),
+        port: parseInt(config.get<string>('DATABASE_PORT') || '3306', 10),
         username: config.get<string>('DATABASE_USER'),
         password: config.get<string>('DATABASE_PASSWORD'),
         database: config.get<string>('DATABASE_NAME'),
@@ -54,8 +54,8 @@ import { SettingsService } from './admin/settings.service';
         serveRoot: '/uploads',
       },
       {
-        rootPath: join(__dirname, '..', '..', 'public'),
-        exclude: ['/api*'],
+        rootPath: join(process.cwd(), 'public'),
+        exclude: ['/api'],
       },
     ),
     AuthModule,

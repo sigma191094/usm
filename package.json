@@ -22,7 +22,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed": "ts-node -r tsconfig-paths/register src/seed.ts",
-    "build:frontend": "npm run build --prefix ../web && powershell -Command \"Remove-Item -Path public -Recurse -Force -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path public; Copy-Item -Path ../web/out/* -Destination public -Recurse -Force\""
+    "build:frontend": "npm run build --prefix ../web && node scripts/copy-static.js"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
