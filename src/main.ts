@@ -1,44 +1,22 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { join } from 'path';
 import { ValidationPipe, RequestMethod } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api', {
-    exclude: [
-      '/',
-      'login',
-      'register',
-      'welcome',
-      'home',
-      'community',
-      'donate',
-      'equipe',
-      'forum',
-      'fun-zone',
-      'gallery',
-      'highlights',
-      'lucky-draw',
-      'matches',
-      'news',
-      'points',
-      'premium',
-      'profile',
-      'support',
-      'vote',
-      'store',
-      'admin',
-      'admin/sponsors',
-      'admin/matches',
-      'admin/settings',
-      'admin/matches/new',
-      'matches/details',
-      'news/details',
-      'news/1',
-      'news/2',
-      'news/3',
-    ],
+    exclude: ['/'],
+  });
+
+  // SPA fallback middleware: Serve index.html for all non-API, non-asset routes
+  app.use((req: any, res: any, next: any) => {
+    const url = req.url;
+    if (url.startsWith('/api') || url.startsWith('/uploads') || url.includes('.')) {
+      return next();
+    }
+    res.sendFile(join(process.cwd(), 'public', 'index.html'));
   });
 
   app.enableCors({
