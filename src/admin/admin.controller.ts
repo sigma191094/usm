@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../auth/roles.guard';
@@ -6,6 +6,7 @@ import { Roles } from '../auth/roles.decorator';
 import { UserRole } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
 import { MatchesService } from '../matches/matches.service';
+import { MatchesScraperService } from '../matches/matches.scraper.service';
 import { NewsService } from '../news/news.service';
 import { StoreService } from '../store/store.service';
 import { AdsService } from '../ads/ads.service';
@@ -26,6 +27,7 @@ export class AdminController {
   constructor(
     private usersService: UsersService,
     private matchesService: MatchesService,
+    private scraperService: MatchesScraperService,
     private newsService: NewsService,
     private storeService: StoreService,
     private adsService: AdsService,
@@ -133,6 +135,35 @@ export class AdminController {
   @Delete('matches/:id')
   @ApiOperation({ summary: 'Delete match' })
   deleteMatch(@Param('id') id: string) { return this.matchesService.remove(+id); }
+
+  @Post('sync-statuses')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Force-close all past upcoming matches → ended' })
+  async syncStatuses() {
+    return this.matchesService.syncExpiredStatuses();
+  }
+
+  @Post('sync-standings')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Sync standings from Soccerway' })
+  async syncStandings() {
+    try {
+      return await this.scraperService.scrapeStandings();
+    } catch (err) {
+      return { success: false, message: err.message || 'Scraper error' };
+    }
+  }
+
+  @Post('sync-fixtures')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Sync fixtures from Soccerway' })
+  async syncFixtures() {
+    try {
+      return await this.scraperService.scrapeMatches();
+    } catch (err) {
+      return { success: false, message: err.message || 'Scraper error' };
+    }
+  }
 
   // --- News Management ---
   @Post('news')

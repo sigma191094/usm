@@ -5,13 +5,15 @@ import { AuthGuard } from '@nestjs/passport';
 import { MatchesService } from './matches.service';
 import { JwtOptionalGuard } from '../auth/jwt-optional.guard';
 import { MatchesScraperService } from './matches.scraper.service';
+import { MatchesTaskService } from './matches.task.service';
 
 @ApiTags('Matches')
 @Controller('matches')
 export class MatchesController {
   constructor(
     private service: MatchesService,
-    private scraperService: MatchesScraperService
+    private scraperService: MatchesScraperService,
+    private taskService: MatchesTaskService,
   ) {}
 
   @Get('players')
@@ -45,6 +47,12 @@ export class MatchesController {
   @ApiBearerAuth() @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Sync fixtures from Soccerway (admin)' })
   syncFixtures() { return this.scraperService.scrapeMatches(); }
+
+  @Post('sync/statuses')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth() @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Force-close all past "upcoming" matches → ended (admin)' })
+  syncStatuses() { return this.taskService.syncExpiredStatuses(); }
 
 
 

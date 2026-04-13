@@ -275,6 +275,19 @@ export class MatchesService {
     return { success: true, message: 'All matches have been deleted' };
   }
 
+  async syncExpiredStatuses(): Promise<{ updated: number }> {
+    const { LessThan } = await import('typeorm');
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
+    const expired = await this.repo.find({
+      where: { status: MatchStatus.UPCOMING, date: LessThan(twoHoursAgo) },
+    });
+    for (const match of expired) {
+      await this.repo.update(match.id, { status: MatchStatus.ENDED });
+      this.logger.log(`✅ Auto-closed #${match.id} "${match.homeTeam} vs ${match.awayTeam}"`);
+    }
+    return { updated: expired.length };
+  }
+
   count() { return this.repo.count(); }
 
   // ─── Players ────────────────────────────────────────────────

@@ -25,6 +25,6 @@ import { PointsModule } from '../points/points.module';
   ],
   controllers: [MatchesController, VotesController],
   providers: [MatchesService, VotesService, MatchesTaskService, MatchesScraperService],
-  exports: [MatchesService],
+  exports: [MatchesService, MatchesScraperService],
 })
 export class MatchesModule {}
