@@ -53,10 +53,6 @@ import { SettingsService } from './admin/settings.service';
         rootPath: join(process.cwd(), 'uploads'),
         serveRoot: '/uploads',
       },
-      {
-        rootPath: join(process.cwd(), 'public'),
-        exclude: ['/api'],
-      },
     ),
     AuthModule,
     UsersModule,

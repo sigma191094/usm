@@ -1,32 +1,38 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { join } from 'path';
-import { ValidationPipe, RequestMethod } from '@nestjs/common';
+import * as express from 'express';
+import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // All controllers go under /api prefix (except root /)
   app.setGlobalPrefix('api', {
     exclude: ['/'],
   });
 
-  // SPA fallback middleware: Serve index.html for all non-API, non-asset routes
+  // Serve static frontend assets (JS, CSS, images, etc.) from /public
+  app.use(express.static(join(process.cwd(), 'public')));
+
+  // SPA fallback: serve index.html for all non-API, non-upload routes
+  // This enables client-side routing (refreshing /home, /matches etc. works)
   app.use((req: any, res: any, next: any) => {
-    const url = req.url;
-    if (url.startsWith('/api') || url.startsWith('/uploads') || url.includes('.')) {
+    const url: string = req.url;
+    if (url.startsWith('/api') || url.startsWith('/uploads')) {
       return next();
     }
     const indexPath = join(process.cwd(), 'public', 'index.html');
     res.sendFile(indexPath, (err: any) => {
       if (err) {
-        // index.html not found (frontend not built yet on this deployment)
-        next();
+        next(); // index.html missing — let NestJS handle it
       }
     });
   });
 
   app.enableCors({
-    origin: true, // Allow any origin in development for easier mobile testing
+    origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: true,
